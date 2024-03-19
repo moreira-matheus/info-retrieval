@@ -77,3 +77,36 @@ Single-wildcard query:
 <img src="./imgs/permuterm-index.png">
 
 <img src="./imgs/permuterm-index-b-tree.png">
+
+### K-grams
+
+Multiple wildcards: `*mpu*`
+
+<img src="./imgs/k-grams-computer.png">
+
+K-gram index:
+
+<p float="left" align="middle">
+    <img src="./imgs/three-grams.png" width="250">
+    <img src="./imgs/three-gram-index.png" width="250">
+</p>
+
+### Spelling correction
+
+Levenshtein distance:
+
+<img src="./imgs/levenshtein-table.png">
+
+<img src="./imgs/levenshtein-aug.png">
+
+It is not feasible to calculate edit distance between one query and all terms.
+
+- Solution: pre-select a few terms.
+
+- Assumption: two terms within a small edit distance have man k-grams in common.
+
+<img src="./imgs/venn-diag.png">
+
+We need a normalization factor, for words which due to their length might have many k-grams in common even though not being close to each other.
+
+- Cardinality of intersection divided by cardinality of union.
