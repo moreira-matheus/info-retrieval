@@ -109,4 +109,54 @@ It is not feasible to calculate edit distance between one query and all terms.
 
 We need a normalization factor, for words which due to their length might have many k-grams in common even though not being close to each other.
 
-- Cardinality of intersection divided by cardinality of union.
+- Cardinality of intersection divided by cardinality of union $\rightarrow$ [Jaccard Coefficient](https://en.wikipedia.org/wiki/Jaccard_index).
+
+**Updated method**:
+
+1. Get k-grams from the query term;
+2. Look them up in the k-gram index;
+3. Compute Jaccard coefficients;
+4. Keep terms within large Jaccard coefficients.
+
+<u>Resource issue</u>: We would need to extract k-grams from *every term* found in the k-gram index, compute the intersection and union, and then the Jaccard coefficients.
+
+<u>Shortcut</u>:
+
+- Numerator: We *already know* the k-grams that the query term and the found term have in common.
+- Denominator: can be calculated with just the *found term's length*.
+  - Number of query term's k-grams $+$ number of found term's k-grams - cardinality of intersection (numerator).
+  - $J(\textrm{computer}, \textrm{cmputer}) = \displaystyle\frac{5}{7 + 8 - 5} = \frac{1}{2}$.
+
+**Final method**:
+
+1. Get k-grams from the query term;
+2. Look them up in the k-gram index;
+3. Compute *edit* distances;
+4. Keep terms within small *edit* distances.
+
+***
+
+### Phonetic correction
+
+[SoundEx algorithm](https://physics.nist.gov/cuu/Reference/soundex.html): every word $\rightarrow$ 4 characters fingerprint.
+
+<img src="./imgs/soundex-algo.png">
+
+**Steps**:
+
+1. Replace letters (except the first one) for the integer in the previous table.
+2. Remove adjacent duplicates.
+3. Remove the zeros.
+4. Left-pad (with zeros) or trim to (first) four digits.
+
+**Examples**:
+
+<img src="./imgs/soundex-examples.png">
+
+***
+
+## This week's reading
+
+Chapter 3: Dictionaries and Tolerant Retrieval
+
+Manning, C. D. (2008). *Introduction to information retrieval*. Syngress Publishing,.
