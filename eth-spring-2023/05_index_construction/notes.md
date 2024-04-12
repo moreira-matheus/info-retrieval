@@ -1,6 +1,6 @@
 # Index Construction
 
-### Blocked Sort-Based Indexing (BSBI)
+## Blocked Sort-Based Indexing (BSBI)
 
 - Divided huge collections into batches.
 - Process batches one by one in memory.
@@ -20,7 +20,7 @@ Complexity:
 
 More [here](https://nlp.stanford.edu/IR-book/html/htmledition/blocked-sort-based-indexing-1.html).
 
-### Single-Pass In-Memory Indexing (SPIMI)
+## Single-Pass In-Memory Indexing (SPIMI)
 
 - When processing batches, it already starts building a standard inverted index (instead of only termID-docId pairs).
 - It stores the terms in the index (instead of termIDs): no term-termID mapping held in memory.
@@ -33,7 +33,7 @@ Complexity:
 
 More [here](https://nlp.stanford.edu/IR-book/html/htmledition/single-pass-in-memory-indexing-1.html).
 
-### MapReduce
+## MapReduce
 
 Task 1: Mapping
 - The set of all Pokémon is distributed among, say, 10 people, to be counted.
@@ -42,3 +42,57 @@ Task 2: Reducing
 - Each person is responsible for consolidating the number of a different Pokémon.
 
 More [here](https://www.databricks.com/br/glossary/mapreduce).
+
+### Building an index with MapReduce
+
+**Mappers**: Take the batch of documents and process it to create a list of term-docID pairs.
+
+<img src="./imgs/mappers.png" width="500">
+
+**Reducers**: Take one term each and consolidate all respective pairs into an entry in the standard inverted index.
+
+<img src="./imgs/reducers.png" width="500">
+
+## Online Index Construction
+
+**First approach**: periodic reconstruction
+
+- Result staleness
+- Potentially, unavailable, or slower, during index construction
+
+**Solution**: auxiliary index
+
+- Main index in disk, auxiliary index (with new entries) in memory.
+- For each query, two lookups are necessary.
+- Merge when auxiliary index is too large (say, every two days).
+
+*Deletion of a document*
+
+Invalidation bit vector:
+- List of pairs of docId and a bit indicating whether the document has been deleted.
+- Invalidated documents get filtered out when returning query results.
+
+More [here](https://nlp.stanford.edu/IR-book/html/htmledition/dynamic-indexing-1.html).
+
+### Complexity analysis
+
+**Linear merging**
+
+<img src="./imgs/complexity-analysis.png" width="750">
+
+
+Simplifying, $\mathcal{O}(n + 2n + ... + \frac{T}{n}n) = \mathcal{O}(\frac{T^2}{n})$.
+
+**Solution**: Logarithmic merging.
+
+<img src="./imgs/log-merging.png" width="750">
+
+Construction time: $\mathcal{O}(T\log\frac{T}{n})$.
+
+More on <u>Log-Structured Merge Trees</u> [here](https://www.cs.umb.edu/~poneil/lsmtree.pdf).
+
+## This week's reading
+
+Chapter 4: Index construction
+
+Manning, C. D. (2008). *Introduction to information retrieval*. Syngress Publishing,.
