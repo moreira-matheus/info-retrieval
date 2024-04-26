@@ -53,4 +53,54 @@ In other words, we want to compress lists of integers.
 
 <img src="./imgs/encoding-gaps.png" width="500">
 
+### Variable Byte Encoding
 
+Prefix codes: UTF-8
+
+<img src="./imgs/utf8.png" width="500">
+
+Variable byte encoding (8 bit packets)
+
+<img src="./imgs/variable-byte-encoding.png" width="500">
+
+Compromise:
+
+<img src="./imgs/compromise-vbe.png" width="500">
+
+### Gamma encoding
+
+Unary code
+
+<img src="./imgs/unary-code.png" width="500">
+
+Gamma encoding
+
+<img src="./imgs/gamma-encoding.png" width="500">
+
+First integers:
+
+<img src="./imgs/gamma-first-ints.png" width="500">
+
+More on Gamma encoding [here](https://www.geeksforgeeks.org/elias-gamma-encoding-in-python/).
+
+### Shannon Entropy
+
+Given some probability distribution, what is the *smallest average* number of bits that we can possibly achieve?
+
+**Entropy**:
+
+$$
+H(X) = \mathbb{E}\big[I(X)\big] = -\sum_{x \in X(\Omega)} p_X(x) \log_{2} p_X(x)
+$$
+
+- $X$: random variable
+- $I(X)$: amount of information (number of bits)
+- $H(X)$: entropy, or the expected value of the amount of information that is carried by $X$.
+
+Shannon's suggestion: $H(X) = \mathbb{E}\bigg[-\log_{2}\big(p_X(X)\big)\bigg]$
+
+**Expected length of Gamma encoding (for any distribution)**:
+
+$$
+\mathbb{E}[L_{\gamma}(X)] \leq 3H(X) = 3\mathbb{E}[I(X)]
+$$
